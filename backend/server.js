@@ -16,32 +16,39 @@ await connectCloudinary()
 const PORT = process.env.PORT || 3800
 
 const allowedOrigins = [
-    
-    // 'http://localhost:5173'
+    'http://localhost:5173',
     'https://mern-blog-unq.vercel.app'
-
-
 ]
 
-
 const corsOptions = {
-    origin:allowedOrigins,
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials:true,
-     allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
 }
+
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
 
-
-app.use("/api",route)
-app.use("/api/posts",validRouter)
-app.use("/api/user",authRouter)
-
-
-connectDB().then(()=>{
-app.listen(PORT,()=>{
-    console.log(`http://localhost:${PORT}`)
+// Test route first
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'Server is working' })
 })
+
+// Uncomment one by one to find which route file causes the error
+
+// Try uncommenting this first:
+app.use("/api", route)
+
+// Then this:
+app.use("/api/posts", validRouter)
+
+// Then this:
+app.use("/api/user", authRouter)
+
+connectDB().then(() => {
+    app.listen(PORT, () => {
+        console.log(`http://localhost:${PORT}`)
+    })
 })
